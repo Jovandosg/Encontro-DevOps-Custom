@@ -9,13 +9,13 @@ output "resource_group_name" {
 }
 
 output "postgres_host" {
-  description = "Host do servidor PostgreSQL"
-  value       = azurerm_postgresql_flexible_server.encontros_devops_db.fqdn
+  description = "Host do servidor PostgreSQL (DNS interno do AKS)"
+  value       = "postgres.postgres.svc.cluster.local"
 }
 
 output "postgres_database_url" {
   description = "DATABASE_URL pronta para uso na aplicação"
-  value       = "postgresql://psqladmin:${random_password.postgres_admin_password.result}@${azurerm_postgresql_flexible_server.encontros_devops_db.fqdn}:5432/encontros_devops?sslmode=require"
+  value       = "postgresql://psqladmin:${random_password.postgres_admin_password.result}@postgres.postgres.svc.cluster.local:5432/encontros_devops"
   sensitive   = true
 }
 
