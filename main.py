@@ -51,6 +51,12 @@ def after_request(response):
         main_logger.debug(f"Requisição completada em {duration:.3f}s")
     return response
 
+# Endpoint de health check
+@app.route('/health')
+def health_check():
+    from flask import jsonify
+    return jsonify({"status": "healthy", "version": settings.SERVICE_VERSION}), 200
+
 # Importar e registrar blueprints
 from routers import api_router, page_router
 app.register_blueprint(api_router.bp, url_prefix='/api/events')
