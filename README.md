@@ -299,7 +299,6 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 - **Avanade** - Identidade visual
 - **Comunidade DevOps** - Inspiração e conhecimento
-- **Fabricio Veronez** - Projeto base original
 
 ---
 
