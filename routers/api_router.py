@@ -31,7 +31,7 @@ def create_event():
                 "method": "API"
             })
             
-            return jsonify(result.model_dump())
+            return jsonify(Event.model_validate(result).model_dump(mode='json'))
             
     except ValueError as e:
         logger.warning(f"Erro de validação na criação do evento: {str(e)}")
@@ -60,7 +60,7 @@ def read_events():
                 "method": "API"
             })
             
-            return jsonify([event.model_dump() for event in events])
+            return jsonify([Event.model_validate(e).model_dump(mode='json') for e in events])
             
     except Exception as e:
         logger.error(f"Erro ao listar eventos: {str(e)}")
@@ -80,7 +80,7 @@ def get_event_by_token(edit_token: str):
                 "method": "API"
             })
             
-            return jsonify(result.model_dump())
+            return jsonify(Event.model_validate(result).model_dump(mode='json'))
             
     except EventNotFoundError:
         logger.warning(f"Evento não encontrado para token: {edit_token[:8]}...")
@@ -108,7 +108,7 @@ def update_event(edit_token: str):
                 "method": "API"
             })
             
-            return jsonify(result.model_dump())
+            return jsonify(Event.model_validate(result).model_dump(mode='json'))
             
     except EventNotFoundError:
         logger.warning(f"Evento não encontrado para atualização: {edit_token[:8]}...")
