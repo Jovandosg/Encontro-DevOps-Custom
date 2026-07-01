@@ -15,7 +15,8 @@ Guia completo passo a passo para provisionar a infraestrutura no Azure e colocar
 7. [Testar a Aplicação](#7-testar-a-aplicação)
 8. [Execução Local (Docker)](#8-execução-local-docker)
 9. [Arquitetura](#9-arquitetura)
-10. [Troubleshooting](#10-troubleshooting)
+10. [Observabilidade](#10-observabilidade)
+11. [Troubleshooting](#11-troubleshooting)
 
 ---
 
@@ -203,6 +204,11 @@ kubectl get pods -n postgres
 
 # IP público do LoadBalancer
 kubectl get svc encontros-devops -n tech-homolog
+kubectl get svc encontros-devops -n tech-producao
+
+# Observabilidade
+kubectl get svc grafana -n default
+kubectl get svc prometheus-server -n default
 ```
 
 Saída esperada:
@@ -273,7 +279,7 @@ docker run -d \
 │  VNet: vnet-encontro-devops (10.0.0.0/16)               │
 │    └── Subnet: snet-encontro-001 (10.0.1.0/24)         │
 │                                                         │
-│  AKS: aks-encontros-devops                              │
+│  AKS: aks-encontros-devops (v1.35.5 · Ubuntu 24.04)    │
 │    ├── namespace: postgres                              │
 │    │     └── PostgreSQL 16 (PVC 10Gi)                  │
 │    │           ├── DB: encontros_devops                 │
@@ -281,10 +287,13 @@ docker run -d \
 │    │           └── DB: hml-encontro-devops              │
 │    ├── namespace: tech-homolog                          │
 │    │     └── encontros-devops (2 réplicas)              │
-│    │           └── LoadBalancer → 80                   │
-│    └── namespace: tech-producao                         │
-│          └── encontros-devops (2 réplicas)              │
-│                └── LoadBalancer → 80                   │
+│    │           └── LoadBalancer → 20.246.198.213:80    │
+│    ├── namespace: tech-producao                         │
+│    │     └── encontros-devops (2 réplicas)              │
+│    │           └── LoadBalancer → 20.75.151.92:80      │
+│    └── namespace: default (Observabilidade)             │
+│          ├── Prometheus → 57.152.80.176:80             │
+│          └── Grafana    → 48.217.220.210:80            │
 │                                                         │
 │  ACR: acrencontrosdevops                                │
 └─────────────────────────────────────────────────────────┘
@@ -292,7 +301,38 @@ docker run -d \
 
 ---
 
-## 10. Troubleshooting
+## 10. Observabilidade
+
+A stack de observabilidade (Prometheus + Grafana) está implantada no namespace `default`.
+
+| Serviço | URL | Credenciais |
+|---|---|---|
+| Grafana | http://48.217.220.210 | admin / ver instrução abaixo |
+| Prometheus | http://57.152.80.176 | — |
+
+### Obter senha do Grafana
+
+```bash
+kubectl get secret --namespace default grafana \
+  -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+```
+
+### Verificar saúde dos componentes
+
+```bash
+# Pods da observabilidade
+kubectl get pods -n default -l app.kubernetes.io/name=grafana
+kubectl get pods -n default -l app=prometheus
+
+# Health check Grafana (endpoint correto — retorna 200 sem autenticação)
+curl http://48.217.220.210/api/health
+```
+
+> **Nota:** o endpoint raiz `/` retorna `302` (redirect para `/login`). Sempre use `/api/health` para health checks automatizados.
+
+---
+
+## 11. Troubleshooting
 
 ### Pod em CrashLoopBackOff
 ```bash
@@ -346,4 +386,7 @@ rm /tmp/db_url.txt
 
 > **Repositório:** https://github.com/Jovandosg/Encontro-DevOps-Custom  
 > **Imagem Docker:** `jovandosg/encontros-devops:latest`  
-> **Aplicação em produção:** http://172.214.120.160
+> **Homologação:** http://20.246.198.213  
+> **Produção:** http://20.75.151.92  
+> **Grafana:** http://48.217.220.210  
+> **Prometheus:** http://57.152.80.176
