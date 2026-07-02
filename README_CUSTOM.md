@@ -95,24 +95,20 @@ O Terraform criará automaticamente:
 
 ### 3.4 Salvar o kubeconfig
 
+O arquivo `kubeconfig` é gerado automaticamente pelo Terraform em `aks-iac/kubeconfig`. Adicione-o permanentemente ao seu shell para não precisar exportar a cada sessão:
+
 ```bash
-# O arquivo kubeconfig é gerado automaticamente pelo Terraform em aks-iac/kubeconfig
-export KUBECONFIG=$(pwd)/kubeconfig
+echo 'export KUBECONFIG=/home/$USER/pessoal/Encontro-DevOps-Custom/aks-iac/kubeconfig' >> ~/.bashrc
+source ~/.bashrc
 kubectl get nodes  # deve listar o node do AKS
 ```
 
-### 3.5 Deployar a stack de observabilidade
+> **Nota:** `make apply` já deploya o Prometheus e o Grafana automaticamente ao final. Nenhum passo adicional é necessário para a observabilidade.
 
-> **Automático:** o `make apply` já chama `make observability` ao final. Este passo só é necessário se precisar redeployar a observabilidade isoladamente em um cluster existente.
-
-```bash
-make observability
-```
-
-Aguarde ~60 segundos e verifique os IPs públicos:
+Para redeployar a observabilidade isoladamente em um cluster existente:
 
 ```bash
-kubectl get svc grafana prometheus-server -n default
+cd aks-iac && make observability
 ```
 
 ---
@@ -217,7 +213,7 @@ kubectl get pods -n postgres
 kubectl get svc encontros-devops -n tech-homolog
 kubectl get svc encontros-devops -n tech-producao
 
-# Observabilidade (requer make observability executado na seção 3.5)
+# Observabilidade (deployada automaticamente pelo make apply)
 kubectl get svc grafana -n default
 kubectl get svc prometheus-server -n default
 ```
