@@ -282,13 +282,13 @@ docker run -d \
 │    │           └── DB: hml-encontro-devops              │
 │    ├── namespace: tech-homolog                          │
 │    │     └── encontros-devops (2 réplicas)              │
-│    │           └── LoadBalancer → 20.246.198.213:80    │
+│    │           └── LoadBalancer → 172.171.158.13:80    │
 │    ├── namespace: tech-producao                         │
 │    │     └── encontros-devops (2 réplicas)              │
-│    │           └── LoadBalancer → 20.75.151.92:80      │
+│    │           └── LoadBalancer → 4.156.99.16:80       │
 │    └── namespace: default (Observabilidade)             │
-│          ├── Prometheus → 57.152.80.176:80             │
-│          └── Grafana    → 48.217.220.210:80            │
+│          ├── Prometheus → 20.231.249.89:80             │
+│          └── Grafana    → 52.147.220.92:80             │
 │                                                         │
 │  ACR: acrencontrosdevops                                │
 └─────────────────────────────────────────────────────────┘
@@ -302,8 +302,8 @@ A stack de observabilidade (Prometheus + Grafana) está implantada no namespace 
 
 | Serviço | URL | Credenciais |
 |---|---|---|
-| Grafana | http://48.217.220.210 | admin / ver instrução abaixo |
-| Prometheus | http://57.152.80.176 | — |
+| Grafana | http://52.147.220.92 | admin / ver instrução abaixo |
+| Prometheus | http://20.231.249.89 | — |
 
 ### Obter senha do Grafana
 
@@ -320,7 +320,7 @@ kubectl get pods -n default -l app.kubernetes.io/name=grafana
 kubectl get pods -n default -l app=prometheus
 
 # Health check Grafana (endpoint correto — retorna 200 sem autenticação)
-curl http://48.217.220.210/api/health
+curl http://52.147.220.92/api/health
 ```
 
 > **Nota:** o endpoint raiz `/` retorna `302` (redirect para `/login`). Sempre use `/api/health` para health checks automatizados.
@@ -381,7 +381,7 @@ rm /tmp/db_url.txt
 
 > **Repositório:** https://github.com/Jovandosg/Encontro-DevOps-Custom  
 > **Imagem Docker:** `jovandosg/encontros-devops:latest`  
-> **Homologação:** http://20.246.198.213  
-> **Produção:** http://20.75.151.92  
-> **Grafana:** http://48.217.220.210  
-> **Prometheus:** http://57.152.80.176
+> **Homologação:** http://172.171.158.13  
+> **Produção:** http://4.156.99.16  
+> **Grafana:** http://52.147.220.92  
+> **Prometheus:** http://20.231.249.89
