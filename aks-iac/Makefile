@@ -18,8 +18,10 @@ plan:
 
 apply:
 	terraform apply tfplan
-	@echo "\n✅ Cluster pronto. Execute no seu terminal:"
-	@echo "   export KUBECONFIG=$(KUBECONFIG_PATH)"
+	@echo "\n⏳ Deployando stack de observabilidade (Prometheus + Grafana)..."
+	@$(MAKE) observability
+	@echo "\n✅ Cluster e observabilidade prontos."
+	@echo "   KUBECONFIG já configurado em: $(KUBECONFIG_PATH)"
 
 destroy:
 	terraform destroy

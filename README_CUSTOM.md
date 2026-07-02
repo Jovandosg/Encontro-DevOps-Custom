@@ -81,6 +81,8 @@ make plan
 make apply
 ```
 
+O `make apply` cria toda a infraestrutura **e** deploya automaticamente o Prometheus e o Grafana ao final.
+
 O Terraform criará automaticamente:
 - Resource Group `rg-encontros-devops` (East US)
 - VNet `vnet-encontro-devops` com subnet `snet-encontro-001` (251 hosts)
@@ -101,7 +103,7 @@ kubectl get nodes  # deve listar o node do AKS
 
 ### 3.5 Deployar a stack de observabilidade
 
-O Terraform **não** sobe o Prometheus e o Grafana automaticamente. Execute este passo após o `make apply`:
+> **Automático:** o `make apply` já chama `make observability` ao final. Este passo só é necessário se precisar redeployar a observabilidade isoladamente em um cluster existente.
 
 ```bash
 make observability
@@ -112,8 +114,6 @@ Aguarde ~60 segundos e verifique os IPs públicos:
 ```bash
 kubectl get svc grafana prometheus-server -n default
 ```
-
-> **Importante:** este passo é obrigatório a cada novo cluster. Sem ele, os serviços de Grafana e Prometheus não estarão disponíveis.
 
 ---
 
