@@ -66,24 +66,19 @@ az account show  # confirme a assinatura correta
 
 ```bash
 cd aks-iac
-cp terraform.tfvars.example terraform.tfvars
+make setup
 ```
 
-Edite `terraform.tfvars` com seus dados:
+O comando `make setup` lê o subscription ID diretamente do Azure CLI e gera o `terraform.tfvars` automaticamente. Não é necessário editar nenhum arquivo manualmente.
 
-```hcl
-subscription_id = "<seu-subscription-id>"
-```
-
-> **Dica:** para obter o subscription_id execute: `az account show --query id -o tsv`
+> **Pré-requisito:** estar autenticado com `az login` antes de rodar `make setup`.
 
 ### 3.3 Inicializar e aplicar
 
 ```bash
-terraform init
-terraform validate
-terraform plan -out=tfplan
-terraform apply tfplan
+make init
+make plan
+make apply
 ```
 
 O Terraform criará automaticamente:

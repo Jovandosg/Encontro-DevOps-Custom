@@ -1,7 +1,14 @@
 KUBECONFIG_PATH := $(CURDIR)/kubeconfig
 export KUBECONFIG := $(KUBECONFIG_PATH)
 
-.PHONY: init apply destroy plan kubeconfig
+.PHONY: init apply destroy plan kubeconfig setup
+
+setup:
+	@echo "Gerando terraform.tfvars com subscription_id da conta Azure ativa..."
+	@SUB_ID=$$(az account show --query id -o tsv 2>/dev/null) && \
+	if [ -z "$$SUB_ID" ]; then echo "❌ Erro: faça 'az login' primeiro." && exit 1; fi && \
+	sed "s/00000000-0000-0000-0000-000000000000/$$SUB_ID/" terraform.tfvars.example > terraform.tfvars && \
+	echo "✅ terraform.tfvars criado com subscription_id=$$SUB_ID"
 
 init:
 	terraform init
