@@ -23,7 +23,7 @@
         "--rm",
         "-i",
         "-e", "PROMETHEUS_URL",
-        "fabriciosveronez/prometheus-mcp-server:v1"
+        "jovandosg/prometheus-mpc-server:v1"
       ],
       "env": {
         "PROMETHEUS_URL": "http://20.231.249.89"
