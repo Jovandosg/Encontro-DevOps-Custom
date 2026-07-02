@@ -1,7 +1,7 @@
 KUBECONFIG_PATH := $(CURDIR)/kubeconfig
 export KUBECONFIG := $(KUBECONFIG_PATH)
 
-.PHONY: init apply destroy plan kubeconfig setup
+.PHONY: init apply destroy plan kubeconfig setup observability
 
 setup:
 	@echo "Gerando terraform.tfvars com subscription_id da conta Azure ativa..."
@@ -30,3 +30,9 @@ kubeconfig:
 	terraform apply -target=local_sensitive_file.kubeconfig
 	@echo "\n✅ kubeconfig atualizado em: $(KUBECONFIG_PATH)"
 	@echo "   Execute: export KUBECONFIG=$(KUBECONFIG_PATH)"
+
+observability:
+	kubectl apply -f ../prometheus/manifestos.yaml
+	@echo "\n✅ Stack de observabilidade deployada."
+	@echo "   Aguarde ~60s e verifique os IPs com:"
+	@echo "   kubectl get svc grafana prometheus-server -n default"
