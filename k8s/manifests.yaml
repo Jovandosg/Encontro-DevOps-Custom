@@ -20,8 +20,8 @@ spec:
     spec:
       containers:
       - name: encontros-devops
-        image: jovandosg/encontros-devops:latest
-        imagePullPolicy: Always
+        image: jovandosg/encontros-devops:v32
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
           name: http
