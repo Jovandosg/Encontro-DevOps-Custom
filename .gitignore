@@ -39,7 +39,8 @@ instance/
 .env.local
 
 # IDEs
-.vscode/
+.vscode/*
+!.vscode/mcp.json
 .idea/
 *.swp
 *.swo

@@ -1,0 +1,33 @@
+{
+  "servers": {
+    "kubernetes": {
+      "type": "stdio",
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e", "ALLOW_ONLY_NON_DESTRUCTIVE_TOOLS",
+        "-v", "${workspaceFolder}/aks-iac/kubeconfig:/home/appuser/.kube/config:ro",
+        "mcp/kubernetes"
+      ],
+      "env": {
+        "ALLOW_ONLY_NON_DESTRUCTIVE_TOOLS": "true"
+      }
+    },
+    "prometheus": {
+      "type": "stdio",
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "-e", "PROMETHEUS_URL",
+        "fabriciosveronez/prometheus-mcp-server:v1"
+      ],
+      "env": {
+        "PROMETHEUS_URL": "http://20.231.249.89"
+      }
+    }
+  }
+}
